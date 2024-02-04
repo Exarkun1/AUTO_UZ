@@ -31,7 +31,7 @@ public class CharacteristicService {
     public Characteristic getByType(String type) {
         return characteristicRepository.findByType(type).orElseThrow();
     }
-    public List<ComponentEntity> getAllComponents() {
+    public List<ComponentEntity> getAllComponentEntities() {
         return componentRepository.findAll();
     }
 

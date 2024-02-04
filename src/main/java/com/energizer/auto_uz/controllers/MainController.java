@@ -1,6 +1,7 @@
 package com.energizer.auto_uz.controllers;
 
 import com.energizer.auto_uz.dto.response.*;
+import com.energizer.auto_uz.services.AdvertisementService;
 import com.energizer.auto_uz.services.CharacteristicService;
 import com.energizer.auto_uz.services.MarkService;
 import com.energizer.auto_uz.services.PersonService;
@@ -71,12 +72,12 @@ public class MainController {
 
     @GetMapping("/get/advertisement/{id}")
     public EagerAdvertisementResponse getAdvertisement(@PathVariable("id") Long id) {
-        return personService.getAdvertisement(id);
+        return advertisementService.getAdvertisement(id);
     }
 
     @GetMapping("/get/advertisement_photo/{id}")
     public ResponseEntity<Resource> getAdvertisementPhoto(@PathVariable("id") Long id, HttpServletRequest request) {
-        Resource resource = fileStorageUtil.loadFile(personService.getAdvertisementFilename(id));
+        Resource resource = fileStorageUtil.loadFile(advertisementService.getAdvertisementFilename(id));
         String contentType;
         try {
             contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
@@ -92,5 +93,6 @@ public class MainController {
     private final CharacteristicService characteristicService;
     private final MarkService markService;
     private final PersonService personService;
+    private final AdvertisementService advertisementService;
     private final FileStorageUtil fileStorageUtil;
 }

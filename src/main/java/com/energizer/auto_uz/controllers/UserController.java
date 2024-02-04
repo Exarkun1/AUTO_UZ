@@ -5,8 +5,8 @@ import com.energizer.auto_uz.dto.reques.AdvertisementRequest;
 import com.energizer.auto_uz.dto.reques.AdvertisementUpdateRequest;
 import com.energizer.auto_uz.dto.response.EagerAdvertisementResponse;
 import com.energizer.auto_uz.dto.response.LazyAdvertisementResponse;
-import com.energizer.auto_uz.exceptions.EntityNotFoundException;
 import com.energizer.auto_uz.exceptions.ObjectNotCreatedException;
+import com.energizer.auto_uz.services.AdvertisementService;
 import com.energizer.auto_uz.services.PersonService;
 import com.energizer.auto_uz.utils.ErrorsUtil;
 import com.energizer.auto_uz.utils.FileStorageUtil;
@@ -46,21 +46,21 @@ public class UserController {
         if(errors.hasErrors()) {
             throw new ObjectNotCreatedException(errorsUtil.getDataErrors(errors));
         }
-        personService.updateAdvertisement(id, advertisement);
+        advertisementService.updateAdvertisement(id, advertisement);
     }
     @DeleteMapping("/delete/advertisement/{id}")
     public void deleteAdvertisement(@PathVariable("id") @Valid @CurrentUserAdvertisementId Long id) {
-        personService.deleteAdvertisement(id);
+        advertisementService.deleteAdvertisement(id);
     }
     @PostMapping("/add/{advertisement_id}/advertisement_photos")
     public void addAdvertisementPhotos(@RequestParam("files") @Valid @IsImageList List<MultipartFile> files,
                                        @PathVariable("advertisement_id") @Valid @CurrentUserAdvertisementId Long id) {
         List<String> filenames = fileStorageUtil.saveFiles(files);
-        personService.addPhotos(id, filenames);
+        advertisementService.addAdvertisementPhotos(id, filenames);
     }
     @DeleteMapping("/delete/advertisement_photo/{id}")
     public void deleteAdvertisementPhoto(@PathVariable("id") @Valid @CurrentUserAdvertisementPhotoId Long id) {
-        personService.deleteAdvertisementPhoto(id);
+        advertisementService.deleteAdvertisementPhoto(id);
     }
     @GetMapping("/get/favourites")
     public List<LazyAdvertisementResponse> getFavourites(Principal principal) {
@@ -85,6 +85,7 @@ public class UserController {
     }
 
     private final PersonService personService;
+    private final AdvertisementService advertisementService;
     private final ErrorsUtil errorsUtil;
     private final FileStorageUtil fileStorageUtil;
 }
