@@ -17,13 +17,14 @@ public class AdvertisementToLazyResponseConverter implements Converter<Advertise
         Model model = gen.getModel();
         Brand brand = model.getBrand();
         return new LazyAdvertisementResponse(
-                source.getPerson().getId(),
+                source.getId(),
                 source.getMileage(),
                 source.getDescription(),
                 source.getPrice(),
                 new MarkResponse(brand.getId(), brand.getName(), null),
                 new MarkResponse(model.getId(), model.getName(), brand.getId()),
-                new MarkResponse(gen.getId(), gen.getName(), model.getId())
+                new MarkResponse(gen.getId(), gen.getName(), model.getId()),
+                source.getPhotos().getFirst().getId()
         );
     }
 }

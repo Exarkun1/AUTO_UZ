@@ -7,6 +7,7 @@ import com.energizer.auto_uz.dto.response.BrandResponse;
 import com.energizer.auto_uz.dto.response.GenerationResponse;
 import com.energizer.auto_uz.dto.response.MarkResponse;
 import com.energizer.auto_uz.dto.response.ModelResponse;
+import com.energizer.auto_uz.exceptions.EntityNotFoundException;
 import com.energizer.auto_uz.models.marks.Brand;
 import com.energizer.auto_uz.models.marks.Generation;
 import com.energizer.auto_uz.models.marks.Model;
@@ -41,8 +42,7 @@ public class MarkService {
     }
     @Transactional(readOnly = true)
     public BrandResponse getBrand(long id) {
-        Brand brand = brandRepository.findById(id).orElse(null);
-        if(brand == null) return null;
+        Brand brand = brandRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         return conversionService.convert(brand, BrandResponse.class);
     }
     @Transactional(readOnly = true)
@@ -63,15 +63,13 @@ public class MarkService {
     }
     @Transactional(readOnly = true)
     public List<MarkResponse> getModelsByBrandId(long brandId) {
-        Brand brand = brandRepository.findById(brandId).orElse(null);
-        if(brand != null) return brand.getModels().stream()
+        Brand brand = brandRepository.findById(brandId).orElseThrow(EntityNotFoundException::new);
+        return brand.getModels().stream()
                 .map(m -> new MarkResponse(m.getId(), m.getName(), m.getBrand().getId())).toList();
-        else return null;
     }
     @Transactional(readOnly = true)
     public ModelResponse getModel(long id) {
-        Model model = modelRepository.findById(id).orElse(null);
-        if(model == null) return null;
+        Model model = modelRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         return conversionService.convert(model, ModelResponse.class);
     }
     @Transactional(readOnly = true)
@@ -80,7 +78,8 @@ public class MarkService {
     }
     public void addGenerations(GenerationListRequest dto) {
         Model model = modelRepository.findById(dto.model_id()).orElseThrow();
-        model.addGenerations(dto.generations().stream().map(g -> conversionService.convert(g, Generation.class)).toList());
+        model.addGenerations(dto.generations().stream()
+                .map(g -> conversionService.convert(g, Generation.class)).toList());
     }
     public void deleteGeneration(long id) {
         generationRepository.deleteById(id);
@@ -92,19 +91,17 @@ public class MarkService {
     }
     @Transactional(readOnly = true)
     public List<MarkResponse> getGenerationsByModelId(long modelId) {
-        Model model = modelRepository.findById(modelId).orElse(null);
-        if(model != null) return model.getGenerations().stream()
+        Model model = modelRepository.findById(modelId).orElseThrow(EntityNotFoundException::new);
+        return model.getGenerations().stream()
                 .map(g -> new MarkResponse(g.getId(), g.getName(), g.getModel().getId())).toList();
-        else return null;
     }
     @Transactional(readOnly = true)
     public Generation getGenerationEntity(long id) {
-        return generationRepository.findById(id).orElse(null);
+        return generationRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
     @Transactional(readOnly = true)
     public GenerationResponse getGeneration(long id) {
         Generation generation = getGenerationEntity(id);
-        if(generation == null) return null;
         return conversionService.convert(generation, GenerationResponse.class);
     }
 

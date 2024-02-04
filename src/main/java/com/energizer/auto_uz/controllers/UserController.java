@@ -5,17 +5,22 @@ import com.energizer.auto_uz.dto.reques.AdvertisementRequest;
 import com.energizer.auto_uz.dto.reques.AdvertisementUpdateRequest;
 import com.energizer.auto_uz.dto.response.EagerAdvertisementResponse;
 import com.energizer.auto_uz.dto.response.LazyAdvertisementResponse;
+import com.energizer.auto_uz.exceptions.EntityNotFoundException;
 import com.energizer.auto_uz.exceptions.ObjectNotCreatedException;
 import com.energizer.auto_uz.services.PersonService;
 import com.energizer.auto_uz.utils.ErrorsUtil;
-import com.energizer.auto_uz.validation.annotatons.CurrentUserAdvertisementId;
-import com.energizer.auto_uz.validation.annotatons.CurrentUserFavouriteId;
-import com.energizer.auto_uz.validation.annotatons.CurrentUserNewFavouriteId;
+import com.energizer.auto_uz.utils.FileStorageUtil;
+import com.energizer.auto_uz.validation.annotatons.*;
+import com.energizer.auto_uz.validation.annotatons.id.CurrentUserAdvertisementId;
+import com.energizer.auto_uz.validation.annotatons.id.CurrentUserAdvertisementPhotoId;
+import com.energizer.auto_uz.validation.annotatons.id.CurrentUserFavouriteId;
+import com.energizer.auto_uz.validation.annotatons.id.CurrentUserNewFavouriteId;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
 import java.util.List;
@@ -47,6 +52,16 @@ public class UserController {
     public void deleteAdvertisement(@PathVariable("id") @Valid @CurrentUserAdvertisementId Long id) {
         personService.deleteAdvertisement(id);
     }
+    @PostMapping("/add/{advertisement_id}/advertisement_photos")
+    public void addAdvertisementPhotos(@RequestParam("files") @Valid @IsImageList List<MultipartFile> files,
+                                       @PathVariable("advertisement_id") @Valid @CurrentUserAdvertisementId Long id) {
+        List<String> filenames = fileStorageUtil.saveFiles(files);
+        personService.addPhotos(id, filenames);
+    }
+    @DeleteMapping("/delete/advertisement_photo/{id}")
+    public void deleteAdvertisementPhoto(@PathVariable("id") @Valid @CurrentUserAdvertisementPhotoId Long id) {
+        personService.deleteAdvertisementPhoto(id);
+    }
     @GetMapping("/get/favourites")
     public List<LazyAdvertisementResponse> getFavourites(Principal principal) {
         return personService.getUserFavourites(principal.getName());
@@ -71,4 +86,5 @@ public class UserController {
 
     private final PersonService personService;
     private final ErrorsUtil errorsUtil;
+    private final FileStorageUtil fileStorageUtil;
 }

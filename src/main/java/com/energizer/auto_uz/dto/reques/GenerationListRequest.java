@@ -1,7 +1,7 @@
 package com.energizer.auto_uz.dto.reques;
 
 import com.energizer.auto_uz.validation.annotatons.GenerationList;
-import com.energizer.auto_uz.validation.annotatons.ModelId;
+import com.energizer.auto_uz.validation.annotatons.id.ModelId;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 

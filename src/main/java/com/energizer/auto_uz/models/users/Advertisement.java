@@ -6,8 +6,11 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Cascade;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "advertisement")
@@ -59,6 +62,19 @@ public class Advertisement {
     @ManyToOne
     @JoinColumn(name = "modification_id", referencedColumnName = "id")
     private ComponentEntity modification;
+
+    @OneToMany(mappedBy = "advertisement")
+    @Cascade({
+            org.hibernate.annotations.CascadeType.PERSIST,
+            org.hibernate.annotations.CascadeType.MERGE
+    })
+    private List<AdvertisementPhoto> photos;
+
+    public void addPhotos(List<AdvertisementPhoto> photoList) {
+        if(photos == null) photos = new ArrayList<>();
+        photoList.forEach(f -> f.setAdvertisement(this));
+        photos.addAll(photoList);
+    }
 
     public Advertisement(Long mileage, String description, Long price, Date date,
                          Generation generation, ComponentEntity corpus, ComponentEntity engine,

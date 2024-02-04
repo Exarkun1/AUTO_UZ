@@ -8,8 +8,11 @@ import com.energizer.auto_uz.models.marks.Brand;
 import com.energizer.auto_uz.models.marks.Generation;
 import com.energizer.auto_uz.models.marks.Model;
 import com.energizer.auto_uz.models.users.Advertisement;
+import com.energizer.auto_uz.models.users.AdvertisementPhoto;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
 
 @Component
 public class AdvertisementToEagerResponseConverter implements Converter<Advertisement, EagerAdvertisementResponse> {
@@ -24,6 +27,7 @@ public class AdvertisementToEagerResponseConverter implements Converter<Advertis
         ComponentEntity transmission = source.getTransmission();
         ComponentEntity modification = source.getModification();
         return new EagerAdvertisementResponse(
+                source.getId(),
                 source.getPerson().getId(),
                 source.getMileage(),
                 source.getDescription(),
@@ -35,7 +39,8 @@ public class AdvertisementToEagerResponseConverter implements Converter<Advertis
                 new ComponentResponse(engine.getId(), engine.getName()),
                 new ComponentResponse(drive.getId(), drive.getName()),
                 new ComponentResponse(transmission.getId(), transmission.getName()),
-                new ComponentResponse(modification.getId(), modification.getName())
+                new ComponentResponse(modification.getId(), modification.getName()),
+                new ArrayList<>(source.getPhotos().stream().map(AdvertisementPhoto::getId).toList())
         );
     }
 }

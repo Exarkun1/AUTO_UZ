@@ -1,6 +1,9 @@
 package com.energizer.auto_uz.dto.response;
 
+import java.util.List;
+
 public record EagerAdvertisementResponse(
+        Long id,
         Long owner_id,
         Long mileage,
         String description,
@@ -12,5 +15,6 @@ public record EagerAdvertisementResponse(
         ComponentResponse engine,
         ComponentResponse drive,
         ComponentResponse transmission,
-        ComponentResponse modification
+        ComponentResponse modification,
+        List<Long> photos_id
 ) {}

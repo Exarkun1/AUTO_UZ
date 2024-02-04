@@ -1,6 +1,6 @@
-package com.energizer.auto_uz.validation.annotatons;
+package com.energizer.auto_uz.validation.annotatons.id;
 
-import com.energizer.auto_uz.validation.validators.CurrentUserFavouriteIdValidator;
+import com.energizer.auto_uz.validation.validators.id.ModelIdValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 
@@ -9,10 +9,10 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Constraint(validatedBy = CurrentUserFavouriteIdValidator.class)
-@Target({ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER})
+@Constraint(validatedBy = ModelIdValidator.class)
+@Target({ElementType.METHOD, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface CurrentUserFavouriteId {
+public @interface ModelId {
     String message() default "Error";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};

@@ -1,7 +1,7 @@
 package com.energizer.auto_uz.dto.reques;
 
-import com.energizer.auto_uz.validation.annotatons.ComponentId;
-import com.energizer.auto_uz.validation.annotatons.GenerationId;
+import com.energizer.auto_uz.validation.annotatons.id.ComponentId;
+import com.energizer.auto_uz.validation.annotatons.id.GenerationId;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;

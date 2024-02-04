@@ -1,7 +1,8 @@
-package com.energizer.auto_uz.validation.validators;
+package com.energizer.auto_uz.validation.validators.id;
 
+import com.energizer.auto_uz.exceptions.EntityNotFoundException;
 import com.energizer.auto_uz.services.CharacteristicService;
-import com.energizer.auto_uz.validation.annotatons.ComponentId;
+import com.energizer.auto_uz.validation.annotatons.id.ComponentId;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import lombok.RequiredArgsConstructor;
@@ -10,8 +11,8 @@ import lombok.RequiredArgsConstructor;
 public class ComponentIdValidator implements ConstraintValidator<ComponentId, Long> {
     @Override
     public boolean isValid(Long aLong, ConstraintValidatorContext constraintValidatorContext) {
-        if(aLong == null) return true;
-        return characteristicService.containComponentByType(aLong, type);
+        if(aLong == null || characteristicService.containComponentByType(aLong, type)) return true;
+        else throw new EntityNotFoundException();
     }
 
     @Override

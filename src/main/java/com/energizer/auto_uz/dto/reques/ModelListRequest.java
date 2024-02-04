@@ -1,6 +1,6 @@
 package com.energizer.auto_uz.dto.reques;
 
-import com.energizer.auto_uz.validation.annotatons.BrandId;
+import com.energizer.auto_uz.validation.annotatons.id.BrandId;
 import com.energizer.auto_uz.validation.annotatons.StringList;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;

@@ -4,9 +4,16 @@ import com.energizer.auto_uz.dto.response.*;
 import com.energizer.auto_uz.services.CharacteristicService;
 import com.energizer.auto_uz.services.MarkService;
 import com.energizer.auto_uz.services.PersonService;
+import com.energizer.auto_uz.utils.FileStorageUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -67,7 +74,23 @@ public class MainController {
         return personService.getAdvertisement(id);
     }
 
+    @GetMapping("/get/advertisement_photo/{id}")
+    public ResponseEntity<Resource> getAdvertisementPhoto(@PathVariable("id") Long id, HttpServletRequest request) {
+        Resource resource = fileStorageUtil.loadFile(personService.getAdvertisementFilename(id));
+        String contentType;
+        try {
+            contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
+        } catch (IOException e) {
+            contentType = "application/octet-stream";
+        }
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(contentType))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+                .body(resource);
+    }
+
     private final CharacteristicService characteristicService;
     private final MarkService markService;
     private final PersonService personService;
+    private final FileStorageUtil fileStorageUtil;
 }
