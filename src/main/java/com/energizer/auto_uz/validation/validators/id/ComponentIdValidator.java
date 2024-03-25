@@ -11,8 +11,7 @@ import lombok.RequiredArgsConstructor;
 public class ComponentIdValidator implements ConstraintValidator<ComponentId, Long> {
     @Override
     public boolean isValid(Long aLong, ConstraintValidatorContext constraintValidatorContext) {
-        if(aLong == null || characteristicService.containComponentByType(aLong, type)) return true;
-        else throw new EntityNotFoundException();
+        return aLong == null || characteristicService.containComponentByType(aLong, type);
     }
 
     @Override

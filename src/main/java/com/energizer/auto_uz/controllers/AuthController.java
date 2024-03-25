@@ -23,6 +23,7 @@ public class AuthController {
     public JwtResponse createToken(@RequestBody JwtRequest request) {
         return loginUtil.buildToken(request);
     }
+
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public void registerUser(@RequestBody @Valid RegisterRequest registerRequest, BindingResult errors) {
@@ -31,11 +32,13 @@ public class AuthController {
         }
         personService.register(registerRequest);
     }
+
     @ExceptionHandler
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     private DataErrors badCredentials(BadCredentialsException e) {
         return errorsUtil.getDateErrors("Неверные email или пароль");
     }
+
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     private DataErrors badCredentials(UserNotCreatedException e) {

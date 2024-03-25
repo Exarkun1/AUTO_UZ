@@ -25,6 +25,7 @@ public class MainController {
     public List<CharacteristicResponse> getAllCharacteristics() {
         return characteristicService.getAllCharacteristics();
     }
+
     @GetMapping("/get/components/{type}")
     public List<ComponentResponse> getComponentsByType(@PathVariable("type") String type) {
         return characteristicService.getComponentsByType(type);
@@ -88,6 +89,16 @@ public class MainController {
                 .contentType(MediaType.parseMediaType(contentType))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
                 .body(resource);
+    }
+
+    @GetMapping("/get/user_info/{id}")
+    public PubliclyUserResponse getUserInfo(@PathVariable("id") Long id) {
+        return personService.getPubliclyUser(id);
+    }
+
+    @GetMapping("/get/feedback/{id}")
+    public FeedbackResponse getFeedback(@PathVariable("id") Long id) {
+        return personService.getFeedback(id);
     }
 
     private final CharacteristicService characteristicService;

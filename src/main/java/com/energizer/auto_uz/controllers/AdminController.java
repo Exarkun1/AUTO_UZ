@@ -44,6 +44,7 @@ public class AdminController {
         }
         markService.addBrands(brands);
     }
+
     @DeleteMapping("/delete/brand/{id}")
     public void deleteBrand(@PathVariable("id") Long id) {
         markService.deleteBrand(id);

@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Date;
+
 @Entity
 @Table(name = "feedback")
 @Getter @Setter @NoArgsConstructor
@@ -21,6 +23,10 @@ public class Feedback {
     @Column(name = "note")
     private String note;
 
+    @Column(name = "time_of_create")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date timeOfCreate;
+
     @ManyToOne
     @JoinColumn(name = "owner_id", referencedColumnName = "id")
     private Person owner;
@@ -28,4 +34,11 @@ public class Feedback {
     @ManyToOne
     @JoinColumn(name = "person_id", referencedColumnName = "id")
     private Person person;
+
+    public Feedback(int score, String note, Person owner) {
+        this.score = score;
+        this.note = note;
+        this.owner = owner;
+        this.timeOfCreate = new Date();
+    }
 }

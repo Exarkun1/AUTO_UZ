@@ -1,5 +1,6 @@
 package com.energizer.auto_uz.models.users;
 
+import com.energizer.auto_uz.models.advertisements.Advertisement;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,6 +32,9 @@ public class Person {
     @Column(name = "role")
     private Role role;
 
+    @Transient
+    private Double avgScore;
+
     @OneToMany(mappedBy = "person")
     @Cascade({
             org.hibernate.annotations.CascadeType.PERSIST,
@@ -46,6 +50,10 @@ public class Person {
     private List<Advertisement> favorites;
 
     @OneToMany(mappedBy = "person")
+    @Cascade({
+            org.hibernate.annotations.CascadeType.PERSIST,
+            org.hibernate.annotations.CascadeType.MERGE
+    })
     private List<Feedback> feedbacks;
 
     public void addAdvertisement(Advertisement advertisement) {
@@ -57,6 +65,12 @@ public class Person {
     public void addFavorite(Advertisement favourite) {
         if(favorites == null) favorites = new ArrayList<>();
         favorites.add(favourite);
+    }
+
+    public void addFeedback(Feedback feedback) {
+        if(feedbacks == null) feedbacks = new ArrayList<>();
+        feedback.setPerson(this);
+        feedbacks.add(feedback);
     }
 
     public Person(String username, String email, String password, Role role) {

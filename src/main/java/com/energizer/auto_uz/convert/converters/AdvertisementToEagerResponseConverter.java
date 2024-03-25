@@ -7,8 +7,8 @@ import com.energizer.auto_uz.models.characteristics.ComponentEntity;
 import com.energizer.auto_uz.models.marks.Brand;
 import com.energizer.auto_uz.models.marks.Generation;
 import com.energizer.auto_uz.models.marks.Model;
-import com.energizer.auto_uz.models.users.Advertisement;
-import com.energizer.auto_uz.models.users.AdvertisementPhoto;
+import com.energizer.auto_uz.models.advertisements.Advertisement;
+import com.energizer.auto_uz.models.advertisements.AdvertisementPhoto;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
@@ -32,6 +32,7 @@ public class AdvertisementToEagerResponseConverter implements Converter<Advertis
                 source.getMileage(),
                 source.getDescription(),
                 source.getPrice(),
+                source.getDate(),
                 new MarkResponse(brand.getId(), brand.getName(), null),
                 new MarkResponse(model.getId(), model.getName(), brand.getId()),
                 new MarkResponse(gen.getId(), gen.getName(), model.getId()),

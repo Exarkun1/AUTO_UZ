@@ -4,8 +4,8 @@ import com.energizer.auto_uz.dto.reques.AdvertisementUpdateRequest;
 import com.energizer.auto_uz.dto.response.EagerAdvertisementResponse;
 import com.energizer.auto_uz.exceptions.EntityNotFoundException;
 import com.energizer.auto_uz.exceptions.FileNotExistException;
-import com.energizer.auto_uz.models.users.Advertisement;
-import com.energizer.auto_uz.models.users.AdvertisementPhoto;
+import com.energizer.auto_uz.models.advertisements.Advertisement;
+import com.energizer.auto_uz.models.advertisements.AdvertisementPhoto;
 import com.energizer.auto_uz.models.users.Person;
 import com.energizer.auto_uz.repositories.AdvertisementPhotoRepository;
 import com.energizer.auto_uz.repositories.AdvertisementRepository;
@@ -33,10 +33,7 @@ public class AdvertisementService {
         if(dto.modification_id() != null) advertisement.setModification(characteristicService.getComponentEntity(dto.modification_id()));
     }
     public void deleteAdvertisement(long id) {
-        Advertisement advertisement = getAdvertisementEntity(id);
-        Person user = advertisement.getPerson();
-        user.getAdvertisements().remove(advertisement);
-        advertisementRepository.delete(advertisement);
+        advertisementRepository.deleteWithId(id);
     }
     @Transactional(readOnly = true)
     public Advertisement getAdvertisementEntity(long id) {
@@ -58,8 +55,6 @@ public class AdvertisementService {
     }
     public void deleteAdvertisementPhoto(long id) {
         AdvertisementPhoto photo = getAdvertisementPhotoEntity(id);
-        Advertisement advertisement = photo.getAdvertisement();
-        advertisement.getPhotos().remove(photo);
         photo.setAdvertisement(null);
     }
     @Transactional(readOnly = true)

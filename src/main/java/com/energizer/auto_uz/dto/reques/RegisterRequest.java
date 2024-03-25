@@ -16,7 +16,7 @@ public record RegisterRequest(
         @Size(min = 3, max = 30, message = "Пароль должно быть в пределах от 3 до 30 символов")
         String password,
 
-        String confirmPassword,
+        String confirm_password,
 
         @Email(message = "Неверный формат электронной почты")
         @UniqueEmail(message = "Адрес электронной почты уже используется")

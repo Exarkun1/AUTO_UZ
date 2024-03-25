@@ -1,5 +1,6 @@
 package com.energizer.auto_uz.dto.response;
 
+import java.util.Date;
 import java.util.List;
 
 public record EagerAdvertisementResponse(
@@ -8,6 +9,7 @@ public record EagerAdvertisementResponse(
         Long mileage,
         String description,
         Long price,
+        Date date_of_create,
         MarkResponse brand,
         MarkResponse model,
         MarkResponse generation,

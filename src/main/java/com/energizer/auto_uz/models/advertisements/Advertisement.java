@@ -1,7 +1,8 @@
-package com.energizer.auto_uz.models.users;
+package com.energizer.auto_uz.models.advertisements;
 
 import com.energizer.auto_uz.models.characteristics.*;
 import com.energizer.auto_uz.models.marks.Generation;
+import com.energizer.auto_uz.models.users.Person;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,7 +30,7 @@ public class Advertisement {
     private String description;
 
     @Column(name = "price")
-    private Long price;
+    private long price;
 
     @Temporal(TemporalType.DATE)
     @Column(name = "date_of_creation")
@@ -43,23 +44,23 @@ public class Advertisement {
     @JoinColumn(name = "generation_id", referencedColumnName = "id")
     private Generation generation;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "corpus_id", referencedColumnName = "id")
     private ComponentEntity corpus;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "engine_id", referencedColumnName = "id")
     private ComponentEntity engine;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "drive_id", referencedColumnName = "id")
     private ComponentEntity drive;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "transmission_id", referencedColumnName = "id")
     private ComponentEntity transmission;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "modification_id", referencedColumnName = "id")
     private ComponentEntity modification;
 
@@ -76,18 +77,18 @@ public class Advertisement {
         photos.addAll(photoList);
     }
 
-    public Advertisement(Long mileage, String description, Long price, Date date,
+    public Advertisement(Long mileage, String description, Long price,
                          Generation generation, ComponentEntity corpus, ComponentEntity engine,
                          ComponentEntity drive, ComponentEntity transmission, ComponentEntity modification) {
         this.mileage = mileage;
         this.description = description;
         this.price = price;
-        this.date = date;
         this.generation = generation;
         this.corpus = corpus;
         this.engine = engine;
         this.drive = drive;
         this.transmission = transmission;
         this.modification = modification;
+        this.date = new Date();
     }
 }

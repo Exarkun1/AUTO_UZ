@@ -1,24 +1,24 @@
 package com.energizer.auto_uz.services;
 
 import com.energizer.auto_uz.dto.reques.AdvertisementRequest;
-import com.energizer.auto_uz.dto.reques.AdvertisementUpdateRequest;
+import com.energizer.auto_uz.dto.reques.FeedbackRequest;
 import com.energizer.auto_uz.dto.reques.RegisterRequest;
 import com.energizer.auto_uz.dto.response.EagerAdvertisementResponse;
+import com.energizer.auto_uz.dto.response.FeedbackResponse;
 import com.energizer.auto_uz.dto.response.LazyAdvertisementResponse;
+import com.energizer.auto_uz.dto.response.PubliclyUserResponse;
 import com.energizer.auto_uz.exceptions.EntityNotFoundException;
-import com.energizer.auto_uz.exceptions.FileNotExistException;
-import com.energizer.auto_uz.models.users.Advertisement;
-import com.energizer.auto_uz.models.users.AdvertisementPhoto;
+import com.energizer.auto_uz.models.advertisements.Advertisement;
+import com.energizer.auto_uz.models.advertisements.AdvertisementPhoto;
+import com.energizer.auto_uz.models.users.Feedback;
 import com.energizer.auto_uz.models.users.Person;
-import com.energizer.auto_uz.repositories.AdvertisementPhotoRepository;
-import com.energizer.auto_uz.repositories.AdvertisementRepository;
+import com.energizer.auto_uz.repositories.FeedbackRepository;
 import com.energizer.auto_uz.repositories.PersonRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,8 +31,16 @@ public class PersonService {
         return personRepository.findByEmail(email);
     }
     @Transactional(readOnly = true)
+    public Optional<Person> findById(long id) {
+        return personRepository.findById(id);
+    }
+    @Transactional(readOnly = true)
     public Person getUserEntity(String email) {
         return findByEmail(email).orElseThrow(EntityNotFoundException::new);
+    }
+    @Transactional(readOnly = true)
+    public Person getUserEntity(long id) {
+        return findById(id).orElseThrow(EntityNotFoundException::new);
     }
     public void register(Person person) {
         personRepository.save(person);
@@ -46,7 +54,6 @@ public class PersonService {
                 dto.mileage(),
                 dto.description(),
                 dto.price(),
-                new Date(),
                 markService.getGenerationEntity(dto.generation_id()),
                 characteristicService.getComponentEntity(dto.corpus_id()),
                 characteristicService.getComponentEntity(dto.engine_id()),
@@ -113,8 +120,42 @@ public class PersonService {
         }
         return false;
     }
+    public void addFeedback(long userId, FeedbackRequest dto, String ownerEmail) {
+        Person user = getUserEntity(userId);
+        Person owner = getUserEntity(ownerEmail);
+        user.addFeedback(new Feedback(dto.score(), dto.note(), owner));
+    }
+    public void deleteFeedback(long id) {
+        feedbackRepository.deleteById(id);
+    }
+    @Transactional(readOnly = true)
+    public boolean containsFeedbackWithUserAndOwner(long userId, String ownerEmail) {
+        Person user = getUserEntity(userId);
+        Person owner = getUserEntity(ownerEmail);
+        return feedbackRepository.findByPersonAndOwner(user, owner).orElse(null) != null;
+    }
+    @Transactional(readOnly = true)
+    public boolean containsFeedbackWithOwner(long id, String email) {
+        Person owner = getFeedbackEntity(id).getOwner();
+        Person user = getUserEntity(email);
+        return owner.getId() == user.getId();
+    }
+    public PubliclyUserResponse getPubliclyUser(long id) {
+        Person user = personRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        user.setAvgScore(feedbackRepository.avgByScoreWherePerson(user));
+        return conversionService.convert(user, PubliclyUserResponse.class);
+    }
+    @Transactional(readOnly = true)
+    public Feedback getFeedbackEntity(long id) {
+        return feedbackRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+    }
+    @Transactional(readOnly = true)
+    public FeedbackResponse getFeedback(long id) {
+        return conversionService.convert(getFeedbackEntity(id), FeedbackResponse.class);
+    }
 
     private final PersonRepository personRepository;
+    private final FeedbackRepository feedbackRepository;
     private final CharacteristicService characteristicService;
     private final MarkService markService;
     private final AdvertisementService advertisementService;

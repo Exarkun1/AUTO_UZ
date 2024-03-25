@@ -11,8 +11,7 @@ import lombok.RequiredArgsConstructor;
 public class ModelIdValidator implements ConstraintValidator<ModelId, Long> {
     @Override
     public boolean isValid(Long aLong, ConstraintValidatorContext constraintValidatorContext) {
-        if(aLong == null || markService.containsModelId(aLong)) return true;
-        else throw new EntityNotFoundException();
+        return aLong == null || markService.containsModelId(aLong);
     }
     private final MarkService markService;
 }

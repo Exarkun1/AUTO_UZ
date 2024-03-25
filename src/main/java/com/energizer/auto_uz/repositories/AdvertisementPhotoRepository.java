@@ -1,6 +1,6 @@
 package com.energizer.auto_uz.repositories;
 
-import com.energizer.auto_uz.models.users.AdvertisementPhoto;
+import com.energizer.auto_uz.models.advertisements.AdvertisementPhoto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,4 +1,4 @@
-package com.energizer.auto_uz.models.users;
+package com.energizer.auto_uz.models.advertisements;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -18,7 +18,7 @@ public class AdvertisementPhoto {
     @Column(name = "filename")
     private String filename;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "advertisement_id", referencedColumnName = "id")
     private Advertisement advertisement;
 
